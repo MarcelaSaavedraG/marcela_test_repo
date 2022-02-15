@@ -1,0 +1,16 @@
+---
+title: "test_repo"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+I am just testing.
+
+```{r}
+y = 34
+t = y-30
+```
+
