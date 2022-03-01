@@ -283,17 +283,29 @@ Trips %>%
   15. Use the latitude and longitude variables in `Stations` to make a visualization of the total number of departures from each station in the `Trips` data. Use either color or size to show the variation in number of departures. We will improve this plot next week when we learn about maps!
   
 ```{r}
-Stations %>% 
-  left_join(Trips, by= "sstation") %>% 
-  group_by(lat,long) %>% 
-  ggplot(aes(x=count(n),y=name,size=count(n))) +
-  geom_point()
+Trips %>% 
+  mutate(name = sstation) %>% 
+  left_join(Stations, by= c("name")) %>% 
+  group_by(name, lat,long) %>% 
+  summarise(n=n()) %>% 
+  ggplot(aes(x=long,y=lat))+
+  geom_point(aes(size= n))+
+  scale_color_viridis_c()+
+  labs(title="Total departures from each station", x="longitude",y="latitude")
 ```
   
   16. Only 14.4% of the trips in our data are carried out by casual users. Create a plot that shows which area(s) have stations with a much higher percentage of departures by casual users. What patterns do you notice? (Again, we'll improve this next week when we learn about maps).
   
 ```{r}
-
+Trips %>% 
+  group_by(sstation) %>% 
+  summarise(casual= sum(client == "Casual"),ntotal=n()) %>% 
+  mutate(portionCasual= casual/ntotal) %>% 
+  left_join(Stations, by=c("sstation"="name")) %>% 
+  ggplot(aes(x=long, y=lat))+
+  geom_point(aes(color= portionCasual))+
+  scale_color_viridis_c()+
+  labs(title="Total departures from each station", x="longitude",y="latitude")
 ```
   
 **DID YOU REMEMBER TO GO BACK AND CHANGE THIS SET OF EXERCISES TO THE LARGER DATASET? IF NOT, DO THAT NOW.**
@@ -372,6 +384,5 @@ This problem uses the data from the Tidy Tuesday competition this week, `kids`. 
 
   21. In this exercise, you are going to try to replicate the graph below, created by Georgios Karamanis. I'm sure you can find the exact code on GitHub somewhere, but **DON'T DO THAT!** You will only be graded for putting an effort into this problem. So, give it a try and see how far you can get without doing too much googling. HINT: use `facet_geo()`. The graphic won't load below since it came from a location on my computer. So, you'll have to reference the original html on the moodle page to see it.
 
-![](kids_data_karamanis.jpeg)
 
 **DID YOU REMEMBER TO UNCOMMENT THE OPTIONS AT THE TOP?**
