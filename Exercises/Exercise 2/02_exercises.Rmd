@@ -1,0 +1,284 @@
+---
+title: 'Weekly Exercises #2'
+author: "Marcela Saavedra Gonzalez"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    df_print: paged
+    code_download: true
+---
+
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
+```
+
+```{r libraries}
+library(tidyverse)     # for graphing and data cleaning
+library(gardenR)       # for Lisa's garden data
+library(lubridate)     # for date manipulation
+library(ggthemes)      # for even more plotting themes
+library(babynames)     # for using the babynames dataset
+library(geofacet)      # for special faceting with US map layout
+theme_set(theme_minimal())       # My favorite ggplot() theme :)
+```
+
+```{r data}
+#Lisa's garden data
+data(garden_harvest)
+
+#Baby names data
+data(babynames)
+
+#COVID-19 data from the New York Times
+covid19 <- read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv")
+```
+
+## Instructions
+
+* Put your name at the top of the document. 
+
+* **For ALL graphs, you should include appropriate labels.** 
+
+* Feel free to change the default theme, which I currently have set to `theme_minimal()`. 
+
+* Use good coding practice. Read the short sections on good code with [pipes](https://style.tidyverse.org/pipes.html) and [ggplot2](https://style.tidyverse.org/ggplot2.html). 
+
+* When you are finished with ALL the exercises, uncomment the options at the top so your document looks nicer. Don't do it before then, or else you might miss some important warnings and messages.
+
+## Warm-up exercises with garden data
+
+These exercises will reiterate the plotting and data wrangling skills you learned in the ggplot_dplyr tutorial. They will use the `garden_harvest` data that you are hopefully starting to become familiar with. 
+
+  1. Filter the data to `lettuce` vegetables. Create a histogram of the weight in grams. This shows the distribution of lettuce "harvests". There may be multiple harvests in the same day since there are multiple varieties of lettuce and I sometimes harvested lettuce more than once a day. For the lettuce, also compute the mean and standard deviation of the harvest (use the `summarize()` function). Use those to help you describe the distribution of lettuce harvests. 
+  
+```{r}
+garden_harvest %>% 
+  filter ( vegetable %in% c("lettuce")) %>% 
+  ggplot(aes(x=weight))+
+  geom_histogram()
+
+
+garden_harvest %>% 
+  filter ( vegetable %in% c("lettuce")) %>% 
+  summarize(mean_weight = mean(weight), 
+  std_weight = sd(weight)) 
+```
+  
+  2. Create a bar chart that shows the number of times I harvested the different varieties of lettuce. Put the variety on the y-axis and count on x-axis. CHALLENGE: order them so the variety I harvested the most is at the top. 
+  
+```{r}
+garden_harvest %>% 
+  filter( vegetable %in% c("lettuce")) %>% 
+  #group_by(variety) %>% 
+  ggplot(aes(y=variety))+
+  geom_bar()
+```
+  
+  3. Filter the data to `beets`. Summarize the data to compute the total weight in grams harvests on each day for each variety of beet. Add two new variables: a. weight in pounds, b. cumulative weight in pounds. Create a line graph that shows the cumulative harvest by day for each variety of beet, with a different color for each variety. Describe what you see. CHALLENGE: make the line colors correspond with the colors of the beets - a reddish-purple color and a dark-yellow color.
+  
+```{r}
+garden_harvest %>% 
+  filter(vegetable %in% "beets") %>% 
+  group_by(variety, date) %>% 
+  summarise(wt_var_day= sum(weight)) %>% 
+  mutate(wt_lbs=  wt_var_day* 0.00220462,
+         cum_wt= cumsum(wt_lbs)) %>% 
+  ggplot(aes(x=date, y=cum_wt, color=variety))+
+  geom_line()
+```
+  
+  4. Summarize the data to compute the daily harvest in pounds for each vegetable. Create side-by-side boxplots to compare the distributions of daily harvests for each vegetable. 
+  
+```{r}
+garden_harvest %>% 
+  group_by(vegetable, date) %>% 
+  summarise(wt_lbs= sum(weight * 0.00220462)) %>% 
+  ggplot(aes(y=vegetable,x=wt_lbs))+
+  geom_boxplot()
+  
+```
+
+## Babynames exercises
+
+We are going to practice more `dplyr` and `ggplot2` skills on the `babynames` dataset from the `babynames` library. First, install the package (unless you're using the server, in which case it is already installed). Then, in the libraries section at the top, uncomment the line where that library is loaded and re-run that code chunk. BTW, this is my kids' favorite dataset ... yes, my kids have a favorite dataset.
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">“Mom, can we please graph the names data?” Yes, yes we can. <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://twitter.com/hashtag/futuredatascientist?src=hash&amp;ref_src=twsrc%5Etfw">#futuredatascientist</a> <a href="https://twitter.com/hashtag/data?src=hash&amp;ref_src=twsrc%5Etfw">#data</a> <a href="https://twitter.com/hashtag/babynames?src=hash&amp;ref_src=twsrc%5Etfw">#babynames</a> <a href="https://t.co/LGgEQRCpN1">pic.twitter.com/LGgEQRCpN1</a></p>&mdash; lisa lendway (@lisalendway) <a href="https://twitter.com/lisalendway/status/1041514612787687425?ref_src=twsrc%5Etfw">September 17, 2018</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+A couple notes about this dataset:
+
+a. As with many datasets that contain the variable sex, in this dataset it is binary. Hopefully this will change in the future.  
+b. Only names with at least 5 uses in a year are included.    
+c. The data come from the Social Security Administration. In the past, not everyone needed or was able to obtain a social security number. So those people are not reflected in the data.
+
+  5. Add a new variable to `babynames` called `has2000` that indicates whether the name was used more than 2000 times within each sex and year.
+  
+```{r}
+babynames %>% 
+  mutate(has2000= n>2000)
+```
+
+  6. Add on to the code you wrote above and compute the proportion of names each year that had more than 2000 babies. Do this separately for each sex. TIP: you can use `TRUE`s and `FALSE`s mathematically. `TRUE` = 1 and `FALSE` = 0.
+  
+```{r}
+babynames %>% 
+  mutate(has2000= n>2000) %>% 
+  filter(has2000 == TRUE) %>% 
+  group_by(year, sex) %>% 
+  summarise(name=name, proportion = n/sum(n))
+```
+  
+  7. Create a line graph from the dataset you created in the previous problem. Year should be along the x-axis, proportion of names with more than 2000 babies is on the y-axis, and there should be a separate line for each sex.
+  
+```{r}
+babynames %>% 
+  mutate(has2000= n>2000) %>% 
+  filter(has2000 == TRUE) %>% 
+  group_by(sex) %>% 
+  mutate(totalnames2000_overyears= sum(n)) %>% 
+  group_by(year) %>% 
+  mutate(prop_names_per_year = sum(n)/totalnames2000_overyears) %>% 
+  ggplot()+
+  geom_line(aes(x=year,y=prop_names_per_year,line=sex,col=sex))+
+  labs(x="",y="Proportion",title="Proportion of names with more than 2000 uses, as measured through the years")
+
+```
+
+  8. Find the most popular names for males, over all years in the data, and ordered by popularity. 
+
+```{r}
+babynames %>% 
+  filter(sex == "M") %>% 
+  group_by(year) %>% 
+  arrange(desc(n)) %>% 
+  slice(1:1) %>% 
+  arrange(desc(n))
+```
+
+  9. Find the most popular names for females, over all years in the data, and ordered by popularity.
+
+```{r}
+babynames %>% 
+  filter(sex == "F") %>% 
+  group_by(year) %>% 
+  arrange(desc(n)) %>% 
+  slice(1:1) %>% 
+  arrange(desc(n))
+```
+
+  10. For each year and sex in the data, find the number of distinct/unique names. For example, if in 1889 all males were named Matthew, Christopher, or John, then there would be 3 distinct names for males in 1889 (in reality, there are more). Graph the results and describe what you see.
+  
+```{r}
+#I had initially done this but found out later theres another way to find disctint
+# q10 <- babynames %>% 
+#   group_by(year, sex) %>% 
+#   mutate(proport = n/sum(n)) %>% 
+#   filter(proport < 0.1) %>% 
+#   summarise(unusual_names_per_year= n())
+# 
+# q10 %>% 
+#   ggplot(aes(x=year,y=unusual_names_per_year))+
+#   geom_col(col="lightblue")+
+#   facet_wrap(~sex)+
+#   labs(title="Number of unusual names per year (proportion < 0.1), per sex",x="",y="Amount of unusual names")+
+#   theme_clean()
+
+
+babynames %>% 
+  group_by(year,sex) %>% 
+  summarise(total = n_distinct(name)) %>% 
+  ggplot(aes(x=year,y=total,colour=sex)) +
+  geom_point()
+
+
+```
+
+  11. (CHALLENGE) In this exercise, we want to find out how using "popular" names has changed over time. For each year and sex, find the proportion of names that are in the top 10 names. Use this to create a line graph with a different line for each sex. What do you observe? HINT: Use the `slice_max()` function. Take time to work through the small steps and write out what it is you need to do in words before jumping into the code.
+  
+```{r}
+
+```
+
+## COVID-19 exercises
+
+These exercises will use data on coronavirus cases in the US provided by the New York Times, which I have called `covid19`. You can (and should) read details about the data [here](https://github.com/nytimes/covid-19-data). We will be using the state-level data, which includes the cumulative number of cases for each state for each date, starting on the date they had their first case. 
+
+In this class, I think it is important the we address and use relevant data, even if it is challenging. That being said, I do not want these data to increase your stress level. If you would prefer not to work with these data, please let me know and I will provide alternative exercises.
+
+  12. Find the date of each state's first case. Order the states from earliest to most recent first cases.  
+  
+```{r}
+covid19 %>% 
+  group_by(state) %>% 
+  arrange(date) %>% 
+  slice(1:1) %>% 
+  arrange(date)
+```
+
+  13. Let's examine data for Minnesota, Wisconsin, Iowa, North Dakota, and South Dakota. Create a line graph of cumulative case count by date and color the lines by state. What do you observe? Is this a "fair" comparison, do you think?
+  
+```{r}
+covid19 %>% 
+  filter( state %in% c("Minnesota","Wisconsin","Iowa","North Dakota","South Dakota")) %>% 
+  group_by(state) %>% 
+  ggplot(aes(y=cases,x=date, colour=state)) +
+  geom_line()+
+  scale_y_continuous(labels = scales::comma)+
+  labs(x=" ",y="Cumulative cases")
+```
+This is not a fair comparison given that North and South Dakota have a much smaller population.
+
+  14. Create the same plot as above, but make the y-axis log scale by using the `scale_y_log10()` function (search for it in Help or run `?scale_y_log10()` in the console). What do you observe? Is this a "fair" comparison? Consider this plot and the previous one, how else might you improve them?
+  
+```{r}
+covid19 %>% 
+  filter( state %in% c("Minnesota","Wisconsin","Iowa","North Dakota","South Dakota")) %>% 
+  group_by(state) %>% 
+  ggplot(aes(y=cases,x=date, colour=state)) +
+  geom_line()+
+  scale_y_log10(labels = scales::comma)+
+  labs(x=" ",y="Cumulative cases")
+```
+It seems more fair now given that we have accounted for changes in the magnitudes of the cumulative cases. It would be fair to do a per capita count.
+
+  15. In this exercise we are going to compute some new variables and get set up for the next exercise. For each state, compute a 1-day lag and 7-day lag of cumulative counts (use the `lag()` function). When you do this, there will be some missing values because at the beginning there are no lags. Use the `replace_na()` function to replace those missing values with 0's. Add two new variables: a. a variable that computes the number of new cases for each day, which can be computed by taking the current cases minus the 1-day lag. b. a variable that computes the 7 day average, which can be computed by taking the current cases minus the 7-day lag and dividing that by 7. 
+  
+```{r}
+newcovid19 <- covid19 %>% 
+  group_by(state) %>% 
+  mutate(one_lag = lag(cases),
+            seven_lag= lag(cases, n=7)) %>% 
+  replace_na(list(one_lag=0,seven_lag=0)) %>% 
+  mutate(new_cases_per_day= cases - one_lag,
+         average_7_day= (cases-seven_lag)/7)
+```
+  
+  16. Using the data you created in the previous step (you can `%>%` that data into `ggplot()`), create a plot with the following: a. facet by state, b. a line with the number of new cases by date, b. a line with the 7-day average number of new cases by date - make this line blue. What do you observe? How could this graph be improved? (TIP: you may want to further adjust the fig.height and fig.width from what I set it to below. Be sure to look at both the graph here in R Studio and in the knitted file before making a final decision.)
+  
+```{r, fig.width=10, fig.height=8}
+newcovid19 %>% 
+  ggplot(aes(x=date)) + 
+  geom_line(aes(y=new_cases_per_day)) +
+  geom_line(aes(y=average_7_day),col="blue") +
+  facet_wrap(~state)
+```
+  I notice that the scales are  the same for all the states, thus making states with low cases seem like almost a straight line, which is not very communicative of the covid situation per state.
+  
+  17. For this part, you will need the `geofacet` library. First, install it (unless you are using the server, in which case it will already be there for you). Then, uncomment the library statement in the 2nd R code chunk above and re-run that R code chunk. Create the same plot as above but instead of regular faceting, use `facet_geo()`. Also set `scales="free"` to the facet function. What do you learn from this plot that you didn't learn from the previous one? (TIP: you may want to further adjust the fig.height and fig.width from what I set it to below. Be sure to look at both the graph here in R Studio and in the knitted file before making a final decision.)
+  
+```{r, fig.width=10, fig.height=8}
+newcovid19 %>% 
+  ggplot(aes(x=date)) + 
+  geom_line(aes(y=new_cases_per_day)) +
+  geom_line(aes(y=average_7_day),col="blue") +
+  facet_geo(~state, scales="free")
+  
+```
+We are able to compare based on geographic context. Furthermore, we are able to change the y scale of each graph, which enables us to better compare the situation by state. In the previous plot since all the scales were the same, states with fewer cases would get overriden by those with more scales. 
+  
+
+
+
+
+
