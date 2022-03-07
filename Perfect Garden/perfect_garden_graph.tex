@@ -1,0 +1,252 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\author{Marcela Saavedra Gonzalez}
+\date{}
+
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdfauthor={Marcela Saavedra Gonzalez},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\begin{document}
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)         }\CommentTok{\# for graphing and data cleaning}
+\FunctionTok{library}\NormalTok{(lubridate)         }\CommentTok{\# for working with dates}
+\CommentTok{\# For the garden data, you need to first install the remotes library, if you haven\textquotesingle{}t already}
+\CommentTok{\# Then, install the gardenR library, if you haven\textquotesingle{}t already. Do this by uncommenting the code below (delete the hashtag) and running it. Then, you should delete this line of code or add the hashtag back so you don\textquotesingle{}t reinstall each time.}
+\NormalTok{remotes}\SpecialCharTok{::}\FunctionTok{install\_github}\NormalTok{(}\StringTok{"llendway/gardenR"}\NormalTok{)}
+\CommentTok{\# Once the library is installed, you don\textquotesingle{}t need to install it again, but each time you need to load the library using the code below. You will know if you haven\textquotesingle{}t installed the library if the code below produces an error.}
+\FunctionTok{library}\NormalTok{(gardenR)}
+\CommentTok{\# theme\_set(theme\_minimal())  \# set a theme if desired}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load the garden data }
+\FunctionTok{data}\NormalTok{(garden\_harvest)}
+\end{Highlighting}
+\end{Shaded}
+
+Explain the question you hope to answer and create the graph below in
+the Graph Week 1 section. For the first week, you may not have the
+skills quite yet to create exactly what you want to create - that's ok!
+Get as close as you can, and the instructors will give you feedback to
+help you out. You can summarize the data in any way you'd like. Add R
+code chunks and comment code as needed. As the weeks go by, you will
+continue to build on this file by putting new code in the next Graph
+sections. You will keep all the old code, add your instructor's feedback
+by copying and pasting it from moodle (found in the Grade section of
+moodle), and make improvements from my suggestions and from other ideas
+you have. Having the old code and graphs and the instructor feedback
+will help you (and the instructors) easily see the progress throughout
+the course.
+
+FYI, Prof.~Lisa just added 2021 data to the \texttt{gardenR} package. If
+you want to use that data (either with the 2020 data or by itself), you
+will need to reinstall the package. Just a warning that variable names
+were maintained but names of vegetables and varieties changed in a few
+cases over the two years (oops). After you load the dataset, you can
+search for gardenR in the Help tab to find out more about the new
+datasets.
+
+\hypertarget{graph-week-1}{%
+\subsection{Graph Week 1}\label{graph-week-1}}
+
+Question I hope to answer: How does the harvest change per week?
+
+I want to see whats the influence of season in the amount harvested in
+the Garden! I expect the harvest to be lower in winter, however, I do
+not know enough about harvesting to be sure about that answer. This
+graph will help me learn more.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{garden\_harvest }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Week =} \FunctionTok{week}\NormalTok{(date)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(Week) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{lbs\_per\_Week=}\NormalTok{ (}\FunctionTok{sum}\NormalTok{(weight))}\SpecialCharTok{*}\FloatTok{0.00220462}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 20 x 2
+##     Week lbs_per_Week
+##    <dbl>        <dbl>
+##  1    23        0.179
+##  2    24        0.423
+##  3    25        3.79 
+##  4    26        8.11 
+##  5    27        9.88 
+##  6    28       12.6  
+##  7    29       19.1  
+##  8    30       30.3  
+##  9    31       44.4  
+## 10    32       59.1  
+## 11    33       73.8  
+## 12    34       85.1  
+## 13    35      132.   
+## 14    36       58.3  
+## 15    37       15.5  
+## 16    38      174.   
+## 17    39       31.9  
+## 18    40       13.3  
+## 19    41       89.7  
+## 20    42       92.2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{harvest\_per\_week }\OtherTok{\textless{}{-}}\NormalTok{ garden\_harvest }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Week =} \FunctionTok{week}\NormalTok{(date)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(Week) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{weight\_per\_week\_lbs=}\NormalTok{ (}\FunctionTok{sum}\NormalTok{(weight))}\SpecialCharTok{*}\FloatTok{0.00220462}\NormalTok{) }
+
+\NormalTok{harvest\_per\_week}\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Week,}\AttributeTok{y=}\NormalTok{weight\_per\_week\_lbs))}\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{fill=}\StringTok{"lightblue"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{y=}\StringTok{"Weight per week (lbs)"}\NormalTok{,}\AttributeTok{x=}\StringTok{"Weeks (starting in June)"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{theme\_linedraw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{perfect_garden_graph_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+Instructor's feedback: (copy the feedback from moodle here)
+
+\hypertarget{graph-week-2}{%
+\subsection{Graph Week 2}\label{graph-week-2}}
+
+Question I hope to answer: (probably the same as previous week but may
+change slightly)
+
+Instructor's feedback: (copy the feedback from moodle here)
+
+\hypertarget{graph-week-3}{%
+\subsection{Graph Week 3}\label{graph-week-3}}
+
+Question I hope to answer: (probably the same as previous week but may
+change slightly)
+
+Instructor's feedback: (copy the feedback from moodle here)
+
+\hypertarget{graph-week-4}{%
+\subsection{Graph Week 4}\label{graph-week-4}}
+
+Question I hope to answer: (probably the same as previous week but may
+change slightly)
+
+Instructor's feedback: (copy the feedback from moodle here)
+
+\hypertarget{graph-week-5}{%
+\subsection{Graph Week 5}\label{graph-week-5}}
+
+Question I hope to answer: (probably the same as previous week but may
+change slightly)
+
+Instructor's feedback: (copy the feedback from moodle here)
+
+\end{document}

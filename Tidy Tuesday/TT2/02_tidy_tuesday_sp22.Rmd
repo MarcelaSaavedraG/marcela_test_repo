@@ -1,0 +1,63 @@
+---
+title: 'Tidy Tuesday #2'
+author: "Marcela Saavedra González"
+output: 
+  html_document:
+    df_print: paged
+    code_download: true
+    theme: cerulean
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
+```
+
+
+```{r libraries,echo=FALSE}
+library(tidyverse)     # for graphing and data cleaning
+library(lubridate)     # for date manipulation
+library(ggthemes)      # for even more plotting themes
+library(janitor)       # for cleaning variable names
+library(geofacet)
+theme_set(theme_minimal()) # My favorite ggplot() theme :)
+```
+
+## Data choice 1: 
+
+```{r, echo=FALSE}
+# Read in the data for the week
+airmen <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-08/airmen.csv')
+```
+
+The first choice for this week's data is about Tuskegee Airmen. Read more about it, including definitions of variables, [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-02-08/readme.md). 
+
+
+
+### Was there a year in which Tuskegee Airmen were aiming for higher ranks within the aviation industry? 
+
+```{r,fig.height=10,fig.width=10}
+
+airmen %>% 
+  separate(graduation_date, into = c("grad_year","grad_month","grad_day"),sep="-") %>% 
+  group_by(grad_year,rank_at_graduation) %>% 
+  mutate(rank_per_year=n()) %>% 
+  summarise(count= n()) %>% 
+  pivot_wider(names_from = rank_at_graduation,
+              values_from = count) 
+
+airmen %>% 
+  separate(graduation_date, into = c("grad_year","grad_month","grad_day"),sep="-") %>% 
+  group_by(grad_year,rank_at_graduation) %>% 
+  mutate(rank_per_year=n()) %>% 
+  select(grad_year,rank_at_graduation,rank_per_year, state) %>% 
+  ggplot(aes(x=grad_year))+
+  geom_col(aes(y=rank_per_year,fill=rank_at_graduation))+
+  facet_wrap(~state)+
+  coord_flip()+
+  labs(x=" ", y=" ", title=" Graduates per rank for each state from 1942 to 1948")
+```
+
+
+I decided to use a summary and then a graph in order to evaluate different aspects of the data. The summary gives an overview of the graduates per rank per year. The column plot does the same but it shows a visual summary per state. Altogether, I can conclude that 1944 was the year with the most graduates. However, year 1943 seems to have  more graduates pursuing higher ranks such as Second Lieutenant and Captain. States with the most pilots were: New York, California, Ohio,Illinois and Philadelphia.
+
+

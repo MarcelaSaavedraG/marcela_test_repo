@@ -1,0 +1,136 @@
+---
+title: ' '
+author: "Marcela Saavedra Gonzalez"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    df_print: paged
+    code_download: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+```
+
+```{r libraries}
+library(tidyverse)         # for graphing and data cleaning
+library(lubridate)         # for working with dates
+# For the garden data, you need to first install the remotes library, if you haven't already
+# Then, install the gardenR library, if you haven't already. Do this by uncommenting the code below (delete the hashtag) and running it. Then, you should delete this line of code or add the hashtag back so you don't reinstall each time.
+remotes::install_github("llendway/gardenR")
+# Once the library is installed, you don't need to install it again, but each time you need to load the library using the code below. You will know if you haven't installed the library if the code below produces an error.
+library(gardenR)
+# theme_set(theme_minimal())  # set a theme if desired
+```
+
+```{r data}
+# load the garden data 
+data(garden_harvest)
+```
+
+Explain the question you hope to answer and create the graph below in the Graph Week 1 section. For the first week, you may not have the skills quite yet to create exactly what you want to create - that's ok! Get as close as you can, and the instructors will give you feedback to help you out. You can summarize the data in any way you'd like. Add R code chunks and comment code as needed. As the weeks go by, you will continue to build on this file by putting new code in the next Graph sections. You will keep all the old code, add your instructor's feedback by copying and pasting it from moodle (found in the Grade section of moodle), and make improvements from my suggestions and from other ideas you have. Having the old code and graphs and the instructor feedback will help you (and the instructors) easily see the progress throughout the course.
+
+FYI, Prof. Lisa just added 2021 data to the `gardenR` package. If you want to use that data (either with the 2020 data or by itself), you will need to reinstall the package. Just a warning that variable names were maintained but names of vegetables and varieties changed in a few cases over the two years (oops). After you load the dataset, you can search for gardenR in the Help tab to find out more about the new datasets.
+
+## Graph Week 1
+
+Question I hope to answer: How does the harvest change per week?
+
+I want to see whats the influence of weeks in the amount harvested in the Garden! I expect the harvest to be higher in warmer weeks, so, during the first weeks I expect more to be harvested, however, I do not know enough about harvesting to be sure about that answer. This graph will help me learn more!
+
+
+```{r}
+garden_harvest %>% 
+  mutate(Week = week(date)) %>% 
+  group_by(Week) %>% 
+  summarise(lbs_per_Week= (sum(weight))*0.00220462)
+
+harvest_per_week <- garden_harvest %>% 
+  mutate(Week = week(date)) %>% 
+  group_by(Week) %>% 
+  summarise(weight_per_week_lbs= (sum(weight))*0.00220462) 
+
+harvest_per_week%>% 
+  ggplot(aes(x=Week,y=weight_per_week_lbs))+
+  geom_col(fill="lightblue")+
+  labs(y="Weight per week (lbs)",x="Weeks (starting in June)")+
+  theme_linedraw()
+```
+Turns out actually it was not the first weeks of harvest the ones where more was harvested. It was around September that the most was harvested. Now, that was surprising!
+
+Instructor's feedback: 	
+
+Excellent! I like that this is a little different from anything else I've seen. Put the y-axis label in the title and omit both x and y axis labels. Compute another interesting statistic for each week (the number of distinct vegetables, the total number of harvests, etc) and fill the bars by that statistic. Use theme() to remove the vertical grid lines.
+
+## Graph Week 2
+
+Question I hope to answer: Which vegetables are driving the changes in harvest per week?
+
+We saw from the previous data set a lot of variation in the weeklyt harvest, thus, I was wondering if maybe there were certain vegetables that we could see getting progressively more or less harvested as time passes. For this I decided to take the proportion and give name to all the vegetables whose proportions are 20%. All vegetables who do not meet this criteria are taken into account through the group "others". This separation allows me to be able to observe which are the most commonly harvested vegetables.
+
+```{r}
+newGH <- garden_harvest %>% 
+  mutate(Week = week(date),
+         lbs = weight*0.00220462) %>% 
+  group_by(Week,vegetable) %>% 
+  summarize(lbs_per_Week= sum(lbs)) %>% 
+  mutate(prop= lbs_per_Week/sum(lbs_per_Week),
+         twenty_plus= ifelse(prop > 0.2, vegetable, "others")) %>% 
+  group_by(twenty_plus,Week) %>% 
+  summarise(total_weight= sum(lbs_per_Week),total_proportion=sum(prop))
+
+newGH%>% 
+  ggplot(aes(x=Week, y=total_weight))+
+  geom_col(aes(fill=twenty_plus))+
+  labs(title="Total harvest per week (lbs), starting june (week 23)", x=" ", y= " ",fill= "Vegetables")+
+  theme_minimal()
+```
+This graph lets us easily identify prof. Lisa's most harvested vegetables per week. It is easy to identify that tomatoes are prominently more harvested  during the first weeks. Squash and pumpkins are heavier thus I would expect that even if the graph shows a lot of them, it might be that just a few were harvested. It seems like Prof. Lisa loves to eat tomatoes in August-September.
+
+Instructor's feedback: (copy the feedback from moodle here)
+
+```{r}
+newGH <- garden_harvest %>% 
+  mutate(Week = week(date)) %>% 
+  group_by(Week) %>% 
+  mutate(lbs_per_Week= sum(weight)*0.00220462) %>% 
+  mutate(prop= lbs_per_Week/sum(lbs_per_Week),
+         twenty_plus= ifelse(prop > 0.2, vegetable, "others")) %>% 
+  group_by(twenty_plus,Week) %>% 
+  summarise(Week, lbs_per_Week, proportion_vegetable= lbs_per_Week/sum(lbs_per_Week))
+```
+
+
+## Graph Week 3
+
+Question I hope to answer: (probably the same as previous week but may change slightly)
+
+```{r}
+
+```
+
+Instructor's feedback: (copy the feedback from moodle here)
+
+## Graph Week 4
+
+Question I hope to answer: (probably the same as previous week but may change slightly)
+
+```{r}
+
+```
+
+Instructor's feedback: (copy the feedback from moodle here)
+
+## Graph Week 5
+
+Question I hope to answer: (probably the same as previous week but may change slightly)
+
+```{r}
+
+```
+
+Instructor's feedback: (copy the feedback from moodle here)
+

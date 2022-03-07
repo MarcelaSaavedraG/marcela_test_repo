@@ -1,0 +1,42 @@
+---
+title: 'Tidy Tuesday #1'
+author: "Marcela Saavedra Gonzalez"
+output: 
+  html_document:
+    df_print: paged
+    code_download: true
+    theme: cerulean
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, error=FALSE, message=FALSE, warning=FALSE)
+```
+
+```{r libraries}
+library(tidyverse)     
+library(lubridate)    
+library(ggthemes)      
+theme_set(theme_minimal()) 
+```
+
+## Data choice 1: Dog breed data
+
+```{r}
+breed_traits <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/breed_traits.csv')
+```
+
+This week's data is about Dog Breeds. Read more about it, including definitions of variables, [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-02-01/readme.md). 
+
+
+```{r, echo = TRUE}
+breed_traits %>% 
+  select(Breed, `Good With Young Children`,`Good With Other Dogs`, `Trainability Level`) %>% 
+  mutate( Score= (`Good With Young Children`+`Good With Other Dogs`+`Trainability Level`)/3) %>% 
+  filter(Score <  3 & Score > 0) %>% 
+  ggplot()+
+  geom_col(aes(y=fct_reorder(Breed,Score,median), x=Score),fill="lightblue")+
+  labs(title = " Score per Breed of Dog", y= "", x="", caption = " Dogs whose score range from 0 to 3, based on the variables= `Good With Young Children`,`Good With Other Dogs`, `Trainability Level`. Plot by Marcela, Pia, Cynthia, Sandy. Data source: 'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/breed_traits.csv'")
+ 
+```
+
+
