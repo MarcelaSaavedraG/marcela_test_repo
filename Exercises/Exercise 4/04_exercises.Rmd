@@ -1,6 +1,6 @@
 ---
 title: 'Weekly Exercises #4'
-author: "Marcela Saavedra González"
+author: "Put your name here"
 output: 
   html_document:
     keep_md: TRUE
@@ -95,93 +95,14 @@ These exercises will reiterate what you learned in the "Mapping data with R" tut
 ### Starbucks locations (`ggmap`)
 
   1. Add the `Starbucks` locations to a world map. Add an aesthetic to the world map that sets the color of the points according to the ownership type. What, if anything, can you deduce from this visualization?  
-  
-```{r}
-world <- get_stamenmap(
-    bbox = c(left = -180, bottom = -57, right = 179, top = 82.1), 
-    maptype = "terrain",
-    zoom = 2)
-```
-  
-```{r}
-ggmap(world) + 
-  geom_point(data = Starbucks, 
-             aes(x = Longitude, y = Latitude, color= `Ownership Type`), 
-             alpha = 0.3, 
-             size = 0.1) +
-  scale_fill_viridis_c(option = "inferno") +
-  theme_map() +
-  labs(title="World map locations of Starbucks by ownership type")+
-  theme(legend.background = element_blank())
-```
-I can deduce that in the American continent most Starbucks are licensed or company owned.Such is the case for almost every other region except for East Asia, where most businesses are joint ventures. Also, Most of the Starbucks seems to concentrate in North America and East Asia. 
 
   2. Construct a new map of Starbucks locations in the Twin Cities metro area (approximately the 5 county metro area).  
-  
-```{r}
-saint_paul <- get_stamenmap(
-    bbox = c(left = -93.4775, bottom = 44.8240, right = -92.7992, top = 45.1615), 
-    maptype = "terrain",
-    zoom = 11)
-```
 
-```{r}
-ggmap(saint_paul) + 
-  geom_point(data = Starbucks, 
-             aes(x = Longitude, y = Latitude), 
-             alpha = 0.3, 
-             size = 1) +
-  scale_fill_viridis_c(option = "inferno") +
-  theme_map() +
-  labs(title="Saint Paul locations of Starbucks")+
-  theme(legend.background = element_blank())
-```
-  
-
-  3. In the Twin Cities plot, play with the zoom number. What does it do?  (just describe what it does - don't actually include more than one map).
-  
-  It changes the details in the graphs such as clear terrain delimitation and clear region labels.
+  3. In the Twin Cities plot, play with the zoom number. What does it do?  (just describe what it does - don't actually include more than one map).  
 
   4. Try a couple different map types (see `get_stamenmap()` in help and look at `maptype`). Include a map with one of the other map types.  
-  
-```{r}
-saint_paul2 <- get_stamenmap(
-    bbox = c(left = -93.4775, bottom = 44.8240, right = -92.7992, top = 45.1615), 
-    maptype = "toner-background",
-    zoom = 11)
-```
-  
-```{r}
-ggmap(saint_paul2) + 
-  geom_point(data = Starbucks, 
-             aes(x = Longitude, y = Latitude), 
-             alpha = 0.3, 
-             size = 1) +
-  scale_fill_viridis_c(option = "inferno") +
-  theme_map() +
-  labs(title="Saint Paul locations of Starbucks")+
-  theme(legend.background = element_blank())
-```
 
   5. Add a point to the map that indicates Macalester College and label it appropriately. There are many ways you can do think, but I think it's easiest with the `annotate()` function (see `ggplot2` cheatsheet).
-  
-
-```{r}
-ggmap(saint_paul) + 
-  geom_point(data = Starbucks, 
-             aes(x = Longitude, y = Latitude), 
-             alpha = 0.3, 
-             size = 1) +
-  annotate('rect',xmin= -93.1766, ymin= 44.9402, xmax= -93.1620, ymax= 44.9354, col="red", fill="red")+
-   annotate('text', x=-93.1766, y=45.0, label = 'Macalester College', colour = I('red'), size = 5)+
- annotate('segment', x=-93.1766, xend= -93.175, y=44.990, yend=44.950,
- colour=I('red'), arrow = arrow(length=unit(0.3,"cm")), size = 1.5) +
-  scale_fill_viridis_c(option = "inferno") +
-  theme_map() +
-  labs(title="Saint Paul locations of Starbucks")+
-  theme(legend.background = element_blank())
-```
-
 
 ### Choropleth maps with Starbucks data (`geom_map()`)
 
