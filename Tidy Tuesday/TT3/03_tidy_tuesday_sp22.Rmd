@@ -1,0 +1,49 @@
+---
+title: 'Tidy Tuesday #3'
+author: "Marcela Saavedra González"
+output: 
+  html_document:
+    df_print: paged
+    code_download: true
+    theme: cerulean
+---
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
+```
+
+```{r libraries}
+library(tidyverse)    
+library(lubridate)    
+library(ggthemes)      
+theme_set(theme_minimal())
+```
+
+## Data choice 1: Freedom Data
+
+```{r}
+# Read in the data
+
+freedom <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-22/freedom.csv')
+```
+
+This week's data is about civil freedoms around the world. Read more about it, including definitions of variables, [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-02-22/readme.md). 
+
+
+Through this visual exploration I want to review the average civil liberties score for each country within each region. It is worth noting that the lower the score the better the civil righs situation.
+
+```{r}
+averageCL_per_country <- freedom %>%
+  group_by(country, Region_Name) %>% 
+  summarise(country_averageCL= sum(CL)/n())
+```
+
+```{r, fig.height=7, fig.width=4}
+averageCL_per_country %>% 
+  ggplot()+
+  geom_point(aes(x=country_averageCL,y=fct_reorder(country,country_averageCL), color=Region_Name))+
+  facet_grid(rows = vars(Region_Name), scales= "free_y")+
+  theme(axis.text.y=element_text(size=4),
+        legend.position = "none")+
+  labs(title= "Civil Liberties Score Per Country In Each Region", x= " ", y= " ")
+```
