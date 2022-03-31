@@ -1,0 +1,13 @@
+name: Covid_Cases_per_10000_Comparable_States_Graph
+title: Covid_Cases_per_10000_Comparable_States_Graph
+username:
+account: marcelasaavedra
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5981961
+bundleId: 5750170
+url: https://marcelasaavedra.shinyapps.io/Covid_Cases_per_10000_Comparable_States_Graph/
+when: 1648740097.18687
+lastSyncTime: 1648740097.18689
+asMultiple: FALSE
+asStatic: FALSE

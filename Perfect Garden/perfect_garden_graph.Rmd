@@ -92,25 +92,42 @@ This graph lets us easily identify prof. Lisa's most harvested vegetables per we
 
 Instructor's feedback: (copy the feedback from moodle here)
 
-```{r}
-newGH <- garden_harvest %>% 
-  mutate(Week = week(date)) %>% 
-  group_by(Week) %>% 
-  mutate(lbs_per_Week= sum(weight)*0.00220462) %>% 
-  mutate(prop= lbs_per_Week/sum(lbs_per_Week),
-         twenty_plus= ifelse(prop > 0.2, vegetable, "others")) %>% 
-  group_by(twenty_plus,Week) %>% 
-  summarise(Week, lbs_per_Week, proportion_vegetable= lbs_per_Week/sum(lbs_per_Week))
-```
-
+I like the idea here, but I think there's still too many categories to distinguish them well. You could try using fct_lump() to keep the 3-4 most prominent veggies and then lump everything else together. You could also manually group some things together - like pumpkins and squash. Omit the vertical grid lines using a theme() argument.
 
 ## Graph Week 3
 
-Question I hope to answer: (probably the same as previous week but may change slightly)
+Question I hope to answer: How did the most popular vegetables' harvest fluctuate per week?
+
+From the previous graph it was easy to see that it was hard to distinguish each vegetable. There were many colors for the many vegetables in the garden. Thus, in this graph, I would like to evaluate how is the harvest per day changing per the most prominent vegetables. 
+
+I want to make a bar graph showing the daily harvest of the most harvested vegetables, first I want to know what those vegetables are:
 
 ```{r}
+popular_vegetables <- garden_harvest %>% 
+  mutate(vegetable_group = fct_lump(vegetable, n=4)) %>% 
+  count(vegetable_group)
 
+head(popular_vegetables)
 ```
+```{r}
+popular_veggies_harvest <- garden_harvest %>% 
+  filter(vegetable== c("beans","lettuce","tomatoes","zucchini")) %>% 
+  group_by(vegetable,date) %>% 
+  summarize(daily_harvest_per_veggie_pounds = sum(weight)*0.00220462)
+
+head(popular_veggies_harvest)
+```
+
+Now that I got the information I wanted I can proceed to create a bar graph showing total daily harvest per vegetable:
+
+```{r, fig.alt="Bar graphs where the most harvested vegetables are shown by dates. There seems to be rather unclear patterns among veteable consumption and date"}
+popular_veggies_harvest %>% 
+  ggplot()+
+  geom_col(aes(x=date,y=daily_harvest_per_veggie_pounds, color=vegetable))+
+  facet_wrap(~vegetable)+
+  labs(title="Daily harvest (in pounds per the four most popular vegetables ", y= "", x= "")
+```
+
 
 Instructor's feedback: (copy the feedback from moodle here)
 
